@@ -38,6 +38,7 @@ class DescribedLaunchEntity:
 
         self.type_name = type(launch_entity).__name__
         self.label = ''
+        self.launch_entity = launch_entity
         if isinstance(launch_entity, Action):
             try:
                 self.description = format_action(launch_entity)

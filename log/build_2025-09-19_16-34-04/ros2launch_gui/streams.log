@@ -1,0 +1,16 @@
+[0.354s] Invoking command in '/home/arjunram/Workspace/ros2launch_gui/build/ros2launch_gui': PYTHONPATH=/home/arjunram/Workspace/ros2launch_gui/build/ros2launch_gui/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/arjunram/Workspace/ros2launch_gui/install/ros2launch_gui/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/arjunram/Workspace/ros2launch_gui/build/ros2launch_gui/build --no-deps symlink_data
+[0.487s] running develop
+[0.585s] running egg_info
+[0.585s] writing ros2launch_gui.egg-info/PKG-INFO
+[0.586s] writing dependency_links to ros2launch_gui.egg-info/dependency_links.txt
+[0.586s] writing entry points to ros2launch_gui.egg-info/entry_points.txt
+[0.586s] writing requirements to ros2launch_gui.egg-info/requires.txt
+[0.586s] writing top-level names to ros2launch_gui.egg-info/top_level.txt
+[0.587s] reading manifest file 'ros2launch_gui.egg-info/SOURCES.txt'
+[0.587s] writing manifest file 'ros2launch_gui.egg-info/SOURCES.txt'
+[0.605s] running build_ext
+[0.605s] Creating /home/arjunram/Workspace/ros2launch_gui/install/ros2launch_gui/lib/python3.10/site-packages/ros2launch-gui.egg-link (link to .)
+[0.606s] 
+[0.606s] Installed /home/arjunram/Workspace/ros2launch_gui/build/ros2launch_gui
+[0.606s] running symlink_data
+[0.622s] Invoked command in '/home/arjunram/Workspace/ros2launch_gui/build/ros2launch_gui' returned '0': PYTHONPATH=/home/arjunram/Workspace/ros2launch_gui/build/ros2launch_gui/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/arjunram/Workspace/ros2launch_gui/install/ros2launch_gui/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/arjunram/Workspace/ros2launch_gui/build/ros2launch_gui/build --no-deps symlink_data

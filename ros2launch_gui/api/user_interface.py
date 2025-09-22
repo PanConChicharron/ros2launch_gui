@@ -67,8 +67,8 @@ class UserInterface:
         self._pending_actions = []
         return actions
     
-    def add_pending_action(self, action: LaunchDescriptionEntity) -> None:
-        self._pending_actions.append(action)
+    def add_pending_action(self, entity: LaunchDescriptionEntity) -> None:
+        self._pending_actions.append(entity)
 
     def on_process_started(self, process_name: str, pid: int, action: DescribedLaunchEntity) -> None:
         """Display a process start event in the GUI."""

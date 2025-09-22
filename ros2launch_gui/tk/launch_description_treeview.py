@@ -27,8 +27,6 @@ class LaunchDescriptionTreeview(ttk.Frame):
 
         self.tree.bind("<<TreeviewSelect>>", self.on_tree_item_selected)
 
-
-
     def add_process_selected_callback(self, callback):
         self.process_selected_callbacks.append(callback)
 

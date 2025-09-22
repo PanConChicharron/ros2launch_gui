@@ -1,7 +1,3 @@
-import signal
-
-from typing import Callable
-
 from python_qt_binding.QtCore import Qt
 from python_qt_binding.QtGui import QBrush
 from python_qt_binding.QtGui import QColor
@@ -12,8 +8,6 @@ from python_qt_binding.QtWidgets import QVBoxLayout
 from python_qt_binding.QtWidgets import QWidget
 
 from launch.actions import EmitEvent
-from launch.events.process import SignalProcess
-from launch.events.process.process_matchers import matches_pid
 from launch_ros.events.lifecycle import ChangeState
 from launch_ros.events import matches_node_name
 from ros2launch_gui.api.describe import DescribedLaunchEntity
@@ -72,9 +66,9 @@ class LaunchDescriptionWidget(QWidget):
 
         self.entity_items = {}
         self.process_items = {}
+        self.process_info = {}
         self.launch_arguments_items = {}
         self.entity_condition_items = {}
-
 
     def on_item_selected(self, item, column):
         if item is not None:
@@ -94,6 +88,7 @@ class LaunchDescriptionWidget(QWidget):
             entity: DescribedLaunchEntity,
             process_name: str,
             pid: int,
+            action=None,
             selected_callback=None
     ) -> None:
         if process_name in self.process_items:
@@ -110,25 +105,17 @@ class LaunchDescriptionWidget(QWidget):
         else:
             self.tree.addTopLevelItem(process_item)
 
+        # Store PID and action
+        self.process_info[process_name] = {
+            "pid": pid,
+            "action": action,
+            "entity": entity,
+        }
+
         process_item.setText(1, 'running')
         process_item.setText(3, f'PID: {pid}')
         process_item.setData(0, self.DetailsCallbackRole, selected_callback)
         process_item.setData(1, Qt.BackgroundRole, QBrush(QColor(100, 255, 100)))
-        process_item.setData(
-            0,
-            self.ContextMenuRole,
-            lambda menu: menu.addAction(
-                f'Stop {process_name}',
-                lambda: self._ui.add_pending_action(
-                    EmitEvent(
-                        event=SignalProcess(
-                            signal_number= signal.SIGINT,
-                            process_matcher=matches_pid(pid)
-                        )
-                    )
-                )
-            )
-        )
 
     def get_lifecycle_menu_items(self, menu: QMenu, node_name: str, current_state: str) -> None:
         for label, transition_id in self.lifecycle_transitions[current_state]:
