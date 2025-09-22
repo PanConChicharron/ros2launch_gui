@@ -34,10 +34,6 @@ class MainWindow(QMainWindow):
         self.launch_description_widget = LaunchDescriptionWidget(ui, self)
         self.details_widget = DetailsWidget(self)
 
-        splitter = QSplitter()
-        splitter.addWidget(self.launch_description_widget)
-        splitter.addWidget(self.details_widget)
-
         # Buttons for process control
         self.start_button = QPushButton("Start")
         self.stop_button = QPushButton("Stop")
@@ -50,8 +46,9 @@ class MainWindow(QMainWindow):
 
         # Layout container for splitter + buttons
         container_layout = QVBoxLayout()
-        container_layout.addWidget(splitter)
+        container_layout.addWidget(self.launch_description_widget)
         container_layout.addLayout(button_layout)
+        container_layout.addWidget(self.details_widget)
 
         container = QWidget()
         container.setLayout(container_layout)
@@ -64,6 +61,8 @@ class MainWindow(QMainWindow):
         # Connect buttons
         self.start_button.clicked.connect(self.start_selected_process)
         self.stop_button.clicked.connect(self.stop_selected_process)
+        self.start_button.setStyleSheet("QPushButton { color: gray; }")
+        self.stop_button.setStyleSheet("QPushButton { color: gray; }")
         self.show()
 
     def on_process_started(self, action, process_name, pid):
@@ -91,19 +90,28 @@ class MainWindow(QMainWindow):
         if current is None:
             self.start_button.setEnabled(False)
             self.stop_button.setEnabled(False)
+            self.start_button.setStyleSheet("QPushButton { color: gray; }")
+            self.stop_button.setStyleSheet("QPushButton { color: gray; }")
             return
 
         status = current.text(1)
+
         if "running" in status:
             self.start_button.setEnabled(False)
+            self.start_button.setStyleSheet("QPushButton { color: gray; }")
             self.stop_button.setEnabled(True)
+            self.stop_button.setStyleSheet("QPushButton { color: white; }")
         elif "exit" in status or status == "":
             self.start_button.setEnabled(True)
+            self.start_button.setStyleSheet("QPushButton { color: white; }")
             self.stop_button.setEnabled(False)
+            self.stop_button.setStyleSheet("QPushButton { color: gray; }")
         else:
             # Lifecycle node or unknown
             self.start_button.setEnabled(True)
             self.stop_button.setEnabled(True)
+        
+        self.details_widget.show_process_output(current.text(2))
     
     def start_selected_process(self):
         if not self.selected_process_item:
@@ -111,6 +119,11 @@ class MainWindow(QMainWindow):
         process_name = self.selected_process_item.text(2)
         if self._ui:
             self._ui.start_process_by_name(process_name)
+        
+        self.start_button.setEnabled(False)
+        self.start_button.setStyleSheet("QPushButton { color: gray; }")
+        self.stop_button.setEnabled(True)
+        self.stop_button.setStyleSheet("QPushButton { color: white; }")
 
     def stop_selected_process(self):
         if not self.selected_process_item:
@@ -118,6 +131,11 @@ class MainWindow(QMainWindow):
         process_name = self.selected_process_item.text(2)
         if self._ui:
             self._ui.stop_process_by_name(process_name)
+        
+        self.start_button.setEnabled(True)
+        self.start_button.setStyleSheet("QPushButton { color: white; }")
+        self.stop_button.setEnabled(False)
+        self.stop_button.setStyleSheet("QPushButton { color: gray; }")
 
     def closeEvent(self, event):
         if self._ui is not None:
