@@ -91,11 +91,14 @@ class LaunchDescriptionWidget(QWidget):
             action=None,
             selected_callback=None
     ) -> None:
-        if process_name in self.process_items:
-            process_item = self.process_items[process_name]
+
+        existing_process_name = next((s for s in self.process_items if process_name.split('-')[0] in s), None)
+        if existing_process_name:
+            process_item = self.process_items[existing_process_name]  # <-- get the actual item
         else:
             process_item = QTreeWidgetItem(['Process', 'running', process_name, f'PID: {pid}'])
             self.process_items[process_name] = process_item
+
         if entity.id in self.entity_items:
             item = self.entity_items[entity.id]
             item.addChild(process_item)

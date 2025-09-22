@@ -189,25 +189,19 @@ class UserInterface(UserInterfaceBase):
         if info and 'entity' in info:
             old_entity = info['entity'].launch_entity
 
-            print(info)
-
-            node_name = old_entity.node_name
-
-            if node_name and not node_name.startswith("<"):
-                node_name = node_name
-            else:
-                node_name = None
+            # Extract base node name if needed
+            node_name = process_name.split('-')[0]
 
             # Clone a fresh Node with the same settings
             new_entity = Node(
                 package=old_entity.node_package,
                 executable=old_entity.node_executable,
                 name=node_name,
-                namespace=getattr(old_entity, "node_namespace", None),
-                arguments=getattr(old_entity, "node_arguments", []),
-                parameters=getattr(old_entity, "node_parameters", []),
-                remappings=getattr(old_entity, "remappings", []),
-                output=getattr(old_entity, "output", "screen"),
+                namespace=old_entity.expanded_node_namespace,
+                arguments=getattr(old_entity, 'arguments', None),
+                parameters=getattr(old_entity, 'parameters', None),
+                remappings=getattr(old_entity, 'expanded_remapping_rules', None),
+                output=getattr(old_entity, 'output', 'screen')
             )
 
             self.add_pending_action(new_entity)

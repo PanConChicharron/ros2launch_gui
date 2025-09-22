@@ -1,1 +1,0 @@
-/home/arjunram/Workspace/ros2launch_gui/launch/demo_launcher.py

@@ -9,6 +9,7 @@ def generate_launch_description():
         package='demo_nodes_cpp',
         executable='talker',
         name='demo_talker',
+        namespace='chatter_ns',
         output='screen'
     )
 
@@ -16,6 +17,7 @@ def generate_launch_description():
         package='demo_nodes_cpp',
         executable='listener',
         name='demo_listener',
+        namespace='chatter_ns',
         output='screen'
     )
 

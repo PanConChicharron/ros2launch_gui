@@ -39,8 +39,10 @@ class DescribedLaunchEntity:
         self.type_name = type(launch_entity).__name__
         self.label = ''
         self.launch_entity = launch_entity
+
         if isinstance(launch_entity, Action):
             try:
+                self.label = describe_substitution(launch_entity.namespace, context)
                 self.description = format_action(launch_entity)
             except Exception as e:
                 self.description = str(e)
@@ -93,6 +95,7 @@ class DescribedLaunchEntity:
                 self.label = launch_entity.node_name
             except RuntimeError:
                 pass
+            self.namespace = launch_entity.expanded_node_namespace
             self.description = "package: {}, executable: {}".format(launch_entity.node_package, launch_entity.node_executable)
         
         elif isinstance(launch_entity, PushRosNamespace):

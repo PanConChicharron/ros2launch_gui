@@ -1,3 +1,0 @@
-[ros2launch.option]
-gui = ros2launch_gui.option.gui:GuiOption
-
