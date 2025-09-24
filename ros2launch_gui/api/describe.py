@@ -92,7 +92,7 @@ class DescribedLaunchEntity:
 
         elif isinstance(launch_entity, Node):
             try:
-                self.label = launch_entity.node_name
+                self.label = describe_substitution(launch_entity.name, context)
             except RuntimeError:
                 pass
             self.namespace = launch_entity.expanded_node_namespace

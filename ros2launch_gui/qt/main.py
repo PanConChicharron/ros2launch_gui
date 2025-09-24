@@ -111,12 +111,12 @@ class MainWindow(QMainWindow):
             self.start_button.setEnabled(True)
             self.stop_button.setEnabled(True)
         
-        self.details_widget.show_process_output(current.text(2))
+        self.details_widget.show_process_output(current.text(0))
     
     def start_selected_process(self):
         if not self.selected_process_item:
             return
-        process_name = self.selected_process_item.text(2)
+        process_name = self.selected_process_item.text(0)
         if self._ui:
             self._ui.start_process_by_name(process_name)
         
@@ -128,7 +128,7 @@ class MainWindow(QMainWindow):
     def stop_selected_process(self):
         if not self.selected_process_item:
             return
-        process_name = self.selected_process_item.text(2)
+        process_name = self.selected_process_item.text(0)
         if self._ui:
             self._ui.stop_process_by_name(process_name)
         
@@ -206,7 +206,6 @@ class UserInterface(UserInterfaceBase):
         info = self.main_window.launch_description_widget.process_info[process_name]
         if info and 'entity' in info:
             old_entity = info['entity'].launch_entity
-
             # Extract base node name if needed
             node_name = process_name.split('-')[0]
 
@@ -228,7 +227,7 @@ class UserInterface(UserInterfaceBase):
         """Stop a running process by name."""
         if process_name in self.main_window.launch_description_widget.process_items:
             process_item = self.main_window.launch_description_widget.process_items[process_name]
-            pid_text = process_item.text(3)  # "PID: 12345"
+            pid_text = process_item.text(2)  # "PID: 12345"
             if pid_text.startswith("PID: "):
                 try:
                     pid = int(pid_text.split(":")[1].strip())

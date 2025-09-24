@@ -8,7 +8,7 @@ def generate_launch_description():
     talker_node = Node(
         package='demo_nodes_cpp',
         executable='talker',
-        name='demo_talker',
+        name='demo_talker_1',
         namespace='chatter_ns',
         output='screen'
     )
@@ -16,7 +16,7 @@ def generate_launch_description():
     listener_node = Node(
         package='demo_nodes_cpp',
         executable='listener',
-        name='demo_listener',
+        name='demo_listener_1',
         namespace='chatter_ns',
         output='screen'
     )
