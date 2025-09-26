@@ -34,6 +34,7 @@ class MainWindow(QMainWindow):
         self.launch_description_widget = LaunchDescriptionWidget(ui, self)
         header = self.launch_description_widget.tree.header()
         header.setSectionResizeMode(QHeaderView.Stretch)
+        header.setSectionResizeMode(1, QHeaderView.ResizeToContents)
         self.details_widget = DetailsWidget(self)
 
         # Buttons for process control

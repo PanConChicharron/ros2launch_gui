@@ -49,6 +49,12 @@ class LaunchDescriptionWidget(QWidget):
         self._ui = ui
         self.tree = QTreeWidget(self)
         self.tree.setHeaderLabels(['Name', 'Status', 'Description', 'Process ID'])
+        self.header_dict = {
+            'Name': 0,
+            'Status': 1,
+            'Description': 2,
+            'Process ID': 3
+        }
         self.tree.header().resizeSection(0, 750)
         self.tree.header().resizeSection(1, 100)
         self.tree.header().resizeSection(2, 200)
@@ -123,9 +129,9 @@ class LaunchDescriptionWidget(QWidget):
         }
         namespace = entity.namespace
 
-        process_item.setText(1, 'running')
-        process_item.setText(2, f'{namespace}')
-        process_item.setText(3, f'PID: {pid}')
+        process_item.setText(self.header_dict['Status'], 'running')
+        process_item.setText(self.header_dict['Description'], f'{namespace}')
+        process_item.setText(self.header_dict['Process ID'], f'PID: {pid}')
         process_item.setData(0, self.DetailsCallbackRole, selected_callback)
         process_item.setData(1, Qt.BackgroundRole, QBrush(QColor(100, 255, 100)))
 
@@ -147,24 +153,24 @@ class LaunchDescriptionWidget(QWidget):
     def on_entity_process_exited(self, entity: DescribedLaunchEntity, process_name: str, pid: int, return_code) -> None:
         if process_name in self.process_items:
             item = self.process_items[process_name]
-            item.setText(1, f'exit: {return_code}')
+            item.setText(self.header_dict['Status'], f'exit: {return_code}')
             if return_code == 0:
-                item.setData(1, Qt.BackgroundRole, QBrush(QColor(200, 255, 200)))
+                item.setData(self.header_dict['Status'], Qt.BackgroundRole, QBrush(QColor(200, 255, 200)))
             else:
-                item.setData(1, Qt.BackgroundRole, QBrush(QColor(255, 128, 128)))
+                item.setData(self.header_dict['Status'], Qt.BackgroundRole, QBrush(QColor(255, 128, 128)))
             item.setData(0, self.ContextMenuRole, None)
 
     def updated_launch_entity(self, launch_entity: DescribedLaunchEntity, status=None):
         if launch_entity.condition is not None:
             if launch_entity.id in self.entity_condition_items:
                 item = self.entity_condition_items[launch_entity.id]
-                item.setText(2, launch_entity.condition)
+                item.setText(self.header_dict['Condition'], launch_entity.condition)
         if launch_entity.id in self.entity_items:
             item = self.entity_items[launch_entity.id]
-            item.setText(2, launch_entity.label)
-            item.setText(3, str(launch_entity.description))
+            item.setText(self.header_dict['Label'], launch_entity.label)
+            item.setText(self.header_dict['Description'], str(launch_entity.description))
             if status is not None:
-                item.setText(1, status)
+                item.setText(self.header_dict['Status'], status)
             if launch_entity.type_name == "IncludeLaunchDescription":
                 for child in launch_entity.children:
                     if child.id not in self.entity_items:
@@ -175,15 +181,15 @@ class LaunchDescriptionWidget(QWidget):
     def on_state_transition(self, entity: DescribedLaunchEntity, start_state: str, goal_state: str) -> None:
         if entity.id in self.entity_items:
             item = self.entity_items[entity.id]
-            item.setText(1, f'{goal_state}')
+            item.setText(self.header_dict['Status'], f'{goal_state}')
             if goal_state == 'active':
-                item.setData(1, Qt.BackgroundRole, QBrush(QColor(100, 255, 100)))
+                item.setData(self.header_dict['Status'], Qt.BackgroundRole, QBrush(QColor(100, 255, 100)))
             else:
-                item.setData(1, Qt.BackgroundRole, QBrush(QColor(255, 255, 100)))
+                item.setData(self.header_dict['Status'], Qt.BackgroundRole, QBrush(QColor(255, 255, 100)))
             if goal_state in self.lifecycle_transitions:
-                item.setData(0, self.ContextMenuRole, lambda menu: self.get_lifecycle_menu_items(menu, entity.label, goal_state))
+                item.setData(self.header_dict['Name'], self.ContextMenuRole, lambda menu: self.get_lifecycle_menu_items(menu, entity.label, goal_state))
             else:
-                item.setData(0, self.ContextMenuRole, None)
+                item.setData(self.header_dict['Name'], self.ContextMenuRole, None)
 
     def add_launch_entity_to_tree(
         self,
@@ -197,7 +203,7 @@ class LaunchDescriptionWidget(QWidget):
         if launch_entity.id in self.entity_items:
             item = self.entity_items[launch_entity.id]
             if status is not None:
-                item.setText(1, status)
+                item.setText(self.header_dict['Status'], status)
         else:
             status_text = status if status is not None else ''
             item = QTreeWidgetItem([
