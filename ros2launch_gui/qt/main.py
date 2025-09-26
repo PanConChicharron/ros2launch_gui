@@ -12,9 +12,9 @@ from python_qt_binding.QtWidgets import QApplication
 from python_qt_binding.QtWidgets import QMainWindow
 from python_qt_binding.QtWidgets import QHBoxLayout
 from python_qt_binding.QtWidgets import QPushButton
-from python_qt_binding.QtWidgets import QSplitter
 from python_qt_binding.QtWidgets import QVBoxLayout
 from python_qt_binding.QtWidgets import QWidget
+from python_qt_binding.QtWidgets import QHeaderView
 
 from ..api import UserInterface as UserInterfaceBase
 
@@ -32,6 +32,8 @@ class MainWindow(QMainWindow):
         self._ui = ui
         self.setWindowTitle("ROS 2 Launch GUI")
         self.launch_description_widget = LaunchDescriptionWidget(ui, self)
+        header = self.launch_description_widget.tree.header()
+        header.setSectionResizeMode(QHeaderView.Stretch)
         self.details_widget = DetailsWidget(self)
 
         # Buttons for process control
@@ -176,6 +178,13 @@ class UserInterface(UserInterfaceBase):
         self.main_window.show()
 
         self.add_pending_action(OpaqueCoroutine(coroutine=self.run_qt))
+        loop = asyncio.get_event_loop()
+        loop.add_signal_handler(signal.SIGINT, self.handle_sigint)
+
+    def handle_sigint(self):
+        print("Caught Ctrl+C, shutting down…")
+        self.on_close()
+        self.app.quit()
 
     async def run_qt(self, *args, **kwargs):
         while not self.closing:
@@ -227,7 +236,7 @@ class UserInterface(UserInterfaceBase):
         """Stop a running process by name."""
         if process_name in self.main_window.launch_description_widget.process_items:
             process_item = self.main_window.launch_description_widget.process_items[process_name]
-            pid_text = process_item.text(2)  # "PID: 12345"
+            pid_text = process_item.text(3)
             if pid_text.startswith("PID: "):
                 try:
                     pid = int(pid_text.split(":")[1].strip())

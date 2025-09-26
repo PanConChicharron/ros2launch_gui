@@ -48,10 +48,11 @@ class LaunchDescriptionWidget(QWidget):
 
         self._ui = ui
         self.tree = QTreeWidget(self)
-        self.tree.setHeaderLabels(['Name', 'Status', 'Description'])
-        self.tree.header().resizeSection(0, 350)
-        self.tree.header().resizeSection(1, 75)
+        self.tree.setHeaderLabels(['Name', 'Status', 'Description', 'Process ID'])
+        self.tree.header().resizeSection(0, 750)
+        self.tree.header().resizeSection(1, 100)
         self.tree.header().resizeSection(2, 200)
+        self.tree.header().resizeSection(3, 100)
 
         self.tree.itemActivated.connect(self.on_item_selected)
         self.tree.itemClicked.connect(self.on_item_selected)
@@ -120,9 +121,11 @@ class LaunchDescriptionWidget(QWidget):
             "action": action,
             "entity": entity,
         }
+        namespace = entity.namespace
 
         process_item.setText(1, 'running')
-        process_item.setText(2, f'PID: {pid}')
+        process_item.setText(2, f'{namespace}')
+        process_item.setText(3, f'PID: {pid}')
         process_item.setData(0, self.DetailsCallbackRole, selected_callback)
         process_item.setData(1, Qt.BackgroundRole, QBrush(QColor(100, 255, 100)))
 
