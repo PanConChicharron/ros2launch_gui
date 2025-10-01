@@ -29,6 +29,10 @@ class MainWindow(QMainWindow):
     def __init__(self, ui: 'UserInterface'=None):
         super().__init__()
 
+        # Enable high DPI scaling
+        QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
+        QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
+        
         self._ui = ui
         self.setWindowTitle("ROS 2 Launch GUI")
         self.launch_description_widget = LaunchDescriptionWidget(ui, self)
@@ -216,7 +220,6 @@ class UserInterface(UserInterfaceBase):
         info = self.main_window.launch_description_widget.process_info[process_name]
         if info and 'entity' in info:
             old_entity = info['entity'].launch_entity
-            # Extract base node name if needed
             node_name = process_name.split('-')[0]
 
             # Clone a fresh Node with the same settings
